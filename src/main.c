@@ -360,7 +360,7 @@ char *getCurrentWallpaper(struct settings settings){
         // Remove 'file:// from the string (8 chars).
         wallpaper += 8;
         // Remove ' from end of string.
-        wallpaper[sizeof(wallpaper) - 1] = "\0"
+        wallpaper[sizeof(wallpaper) - 1] = "\0";
     }
     pclose(fp);
 
