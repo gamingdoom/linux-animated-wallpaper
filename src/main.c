@@ -16,8 +16,9 @@
 #include "main.h"
 
 /*
- * Supported Desktop Environment(s):
+ * Supported Desktop Environments:
  * XFCE
+ * GNOME
  */
 
 bool shouldExit;
@@ -53,6 +54,10 @@ int main()
     if (strcmp(de, "XFCE") == 0)
     {
         DE = XFCE;
+    }
+    else if (strcmp(de, "GNOME") == 0 || strcmp(de, "ubuntu:GNOME") == 0)
+    {
+        DE = GNOME;
     }
     else
     {
@@ -309,8 +314,12 @@ void setWallpaper(char *frame, struct settings settings){
     switch (DE)
     {
         case XFCE:
-            // Get the wallpaper using xfce4-desktop.
+            // Set the wallpaper using xfce4-desktop.
             snprintf(command, PATH_MAX, "xfconf-query -c xfce4-desktop -p /backdrop/screen%d/monitor%s/workspace%d/last-image -s %s", settings.xfceScreen, settings.xfceMonitor, settings.xfceWorkspace, frame);
+            break;
+        case GNOME:
+            // Set the wallpaper using gnome-desktop-item.
+            snprintf(command, PATH_MAX, " gsettings set org.gnome.desktop.background picture-uri file://%s", frame);
             break;
         default:
             printf("Error getting DE.\n");
@@ -331,6 +340,10 @@ char *getCurrentWallpaper(struct settings settings){
             // Get the wallpaper using xfce4-desktop.
             snprintf(command, PATH_MAX, "xfconf-query -c xfce4-desktop -p /backdrop/screen%d/monitor%s/workspace%d/last-image", settings.xfceScreen, settings.xfceMonitor, settings.xfceWorkspace);
             break;
+        case GNOME:
+            // Get the wallpaper using gnome-desktop.
+            snprintf(command, PATH_MAX, "gsettings get org.gnome.desktop.background picture-uri");
+            break;
         default:
             printf("Error getting DE.\n");
             exit(1);
@@ -343,6 +356,12 @@ char *getCurrentWallpaper(struct settings settings){
         exit(1);
     }
     fgets(wallpaper, PATH_MAX, fp);
+    if (DE == GNOME){
+        // Remove 'file:// from the string (8 chars).
+        wallpaper += 8;
+        // Remove ' from end of string.
+        wallpaper[strlen(wallpaper) - 1] = '\0';
+    }
     pclose(fp);
 
     return wallpaper;
