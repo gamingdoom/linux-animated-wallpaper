@@ -55,7 +55,7 @@ int main()
     {
         DE = XFCE;
     }
-    else if (strcmp(de, "GNOME") == 0 || strcmp(de, "ubuntu:GNOME"))
+    else if (strcmp(de, "GNOME") == 0 || strcmp(de, "ubuntu:GNOME") == 0)
     {
         DE = GNOME;
     }
@@ -319,7 +319,7 @@ void setWallpaper(char *frame, struct settings settings){
             break;
         case GNOME:
             // Set the wallpaper using gnome-desktop-item.
-            snprintf(command, PATH_MAX, "gconftool-2 --type string --set /desktop/gnome/background/picture_filename file://%s", frame);
+            snprintf(command, PATH_MAX, " gsettings set org.gnome.desktop.background picture-uri file://%s", frame);
             break;
         default:
             printf("Error getting DE.\n");
@@ -357,8 +357,10 @@ char *getCurrentWallpaper(struct settings settings){
     }
     fgets(wallpaper, PATH_MAX, fp);
     if (DE == GNOME){
-        // Remove file:// from the string.
-        wallpaper += 7;
+        // Remove 'file:// from the string (8 chars).
+        wallpaper += 8;
+        // Remove ' from end of string.
+        wallpaper[sizeof(wallpaper) - 1] = "\0"
     }
     pclose(fp);
 
