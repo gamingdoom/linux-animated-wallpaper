@@ -55,7 +55,7 @@ int main()
     {
         DE = XFCE;
     }
-    else if (strcmp(de, "GNOME") == 0)
+    else if (strcmp(de, "GNOME") == 0 | strcmp(de, "ubuntu:GNOME"))
     {
         DE = GNOME;
     }
