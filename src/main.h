@@ -18,5 +18,6 @@ void signalHandler(int sig);
 struct timeval GetTimeStamp();
 
 enum{
-    XFCE
+    XFCE,
+    GNOME
 };
