@@ -22,6 +22,7 @@
 
 bool shouldExit;
 int DE;
+char *command;
 
 void signalHandler(int sig){
     // Handle SIGINT and SIGTERM
@@ -37,8 +38,9 @@ int main()
     printf("FPS: %d\n", settings.fps);
     printf("Path: %s\n", settings.filepath);
 
+    command = malloc(sizeof(char) * PATH_MAX);
     int currFrame = 1;
-    unsigned long long sleepTime = 1000000 / (settings.fps);
+    unsigned long long sleepTime = 1000000 / (settings.fps*2);
     shouldExit = false;
 
     // Get the current wallpaper
@@ -120,6 +122,10 @@ int main()
 
     free(settings.filepath);
     free(settings.configfile);
+    free(settings.xfceMonitor);
+    free(command);
+    free(currentWallpaper);
+
     return 0;
 }
 
@@ -300,8 +306,6 @@ int getTotalFrames(void){
 }
 
 void setWallpaper(char *frame, struct settings settings){
-    char *command = malloc(sizeof(char) * PATH_MAX);
-    
     switch (DE)
     {
         case XFCE:
@@ -314,13 +318,11 @@ void setWallpaper(char *frame, struct settings settings){
     }
 
     system(command);
-    free(command);
 
     return;
 }
 
 char *getCurrentWallpaper(struct settings settings){
-    char *command = malloc(sizeof(char) * PATH_MAX);
     char *wallpaper = malloc(sizeof(char) * PATH_MAX);
 
     switch (DE)
@@ -342,7 +344,6 @@ char *getCurrentWallpaper(struct settings settings){
     }
     fgets(wallpaper, PATH_MAX, fp);
     pclose(fp);
-    free(command);
 
     return wallpaper;
 }
