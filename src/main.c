@@ -1,4 +1,3 @@
-
 // Change the wallpaper to create an animation.
 
 #include <linux/limits.h>
@@ -27,7 +26,7 @@ char *command;
 
 void signalHandler(int sig){
     // Handle SIGINT and SIGTERM
-    printf("\nExiting...\n");
+    printf("\nExiting...\nSignal: %d\n", sig);
     shouldExit = true;
     return;
 }
@@ -41,7 +40,7 @@ int main()
 
     command = malloc(sizeof(char) * PATH_MAX);
     int currFrame = 1;
-    unsigned long long sleepTime = 1000000 / (settings.fps*2);
+    unsigned long long sleepTime = 1000000 / (settings.fps*1);
     shouldExit = false;
 
     // Get the current wallpaper
